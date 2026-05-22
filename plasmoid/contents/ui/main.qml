@@ -387,7 +387,7 @@ PlasmoidItem {
         id: flick
         Layout.minimumWidth:    280
         Layout.preferredWidth:  Math.max(col.implicitWidth + 24, 300)
-        Layout.preferredHeight: Math.min(col.implicitHeight + 16, 400)
+        Layout.preferredHeight: 400
         clip: true
         contentHeight: col.implicitHeight
         contentWidth: width
@@ -405,6 +405,7 @@ PlasmoidItem {
         ColumnLayout {
             id: col
             width: flick.width
+            height: Math.max(implicitHeight, flick.height)
             spacing: 5
 
             // ── Header ──────────────────────────────────────────────────────
@@ -414,6 +415,9 @@ PlasmoidItem {
                 font.pixelSize: 15; font.bold: true
                 horizontalAlignment: Text.AlignHCenter
             }
+
+            // Pushes content to the bottom (near taskbar) when popup is taller than content
+            Item { Layout.fillHeight: true }
 
             // ── BATTERY (hidden on desktop PCs without a battery) ────────────
             ColumnLayout {
