@@ -76,6 +76,8 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: batGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            opacity: Plasmoid.configuration.showBattery ? 1 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 150 } }
             RowLayout {
                 spacing: 4
                 CheckBox { checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked }
@@ -133,6 +135,8 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: cpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            opacity: Plasmoid.configuration.showCpu ? 1 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 150 } }
             Repeater {
                 model: page.cpuSensors
                 delegate: RowLayout {
@@ -181,6 +185,8 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: gpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            opacity: Plasmoid.configuration.showGpu ? 1 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 150 } }
             Repeater {
                 model: page.gpuSensors
                 delegate: RowLayout {
@@ -229,6 +235,8 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: ramGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            opacity: Plasmoid.configuration.showRam ? 1 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 150 } }
             RowLayout {
                 spacing: 4
                 CheckBox { checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked }
@@ -256,6 +264,8 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: fansGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            opacity: Plasmoid.configuration.showFans ? 1 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 150 } }
             Repeater {
                 model: page.fanSensors
                 delegate: RowLayout {
@@ -287,6 +297,8 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: netGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            opacity: Plasmoid.configuration.showNetwork ? 1 : 0.4
+            Behavior on opacity { NumberAnimation { duration: 150 } }
             RowLayout {
                 spacing: 4
                 CheckBox { checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked }
