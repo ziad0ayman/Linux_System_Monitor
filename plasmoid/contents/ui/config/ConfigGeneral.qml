@@ -69,10 +69,7 @@ KCM.SimpleKCM {
                 id: bat
                 Kirigami.FormData.label: i18n("Sections:")
                 checked: Plasmoid.configuration.showBattery
-                onToggled: {
-                    Plasmoid.configuration.showBattery = checked
-                    batGroup.visible = checked
-                }
+                onToggled: Plasmoid.configuration.showBattery = checked
                 text: i18n("Battery")
             }
         }
@@ -129,10 +126,7 @@ KCM.SimpleKCM {
             CheckBox {
                 id: cpu
                 checked: Plasmoid.configuration.showCpu
-                onToggled: {
-                    Plasmoid.configuration.showCpu = checked
-                    cpuGroup.visible = checked
-                }
+                onToggled: Plasmoid.configuration.showCpu = checked
                 text: i18n("CPU")
             }
         }
@@ -180,10 +174,7 @@ KCM.SimpleKCM {
             CheckBox {
                 id: gpu
                 checked: Plasmoid.configuration.showGpu
-                onToggled: {
-                    Plasmoid.configuration.showGpu = checked
-                    gpuGroup.visible = checked
-                }
+                onToggled: Plasmoid.configuration.showGpu = checked
                 text: i18n("GPU")
             }
         }
@@ -231,10 +222,7 @@ KCM.SimpleKCM {
             CheckBox {
                 id: ramSec
                 checked: Plasmoid.configuration.showRam
-                onToggled: {
-                    Plasmoid.configuration.showRam = checked
-                    ramGroup.visible = checked
-                }
+                onToggled: Plasmoid.configuration.showRam = checked
                 text: i18n("RAM")
             }
         }
@@ -261,10 +249,7 @@ KCM.SimpleKCM {
             CheckBox {
                 id: fans
                 checked: Plasmoid.configuration.showFans
-                onToggled: {
-                    Plasmoid.configuration.showFans = checked
-                    fansGroup.visible = checked
-                }
+                onToggled: Plasmoid.configuration.showFans = checked
                 text: i18n("Fans")
             }
         }
@@ -295,10 +280,7 @@ KCM.SimpleKCM {
             CheckBox {
                 id: net
                 checked: Plasmoid.configuration.showNetwork
-                onToggled: {
-                    Plasmoid.configuration.showNetwork = checked
-                    netGroup.visible = checked
-                }
+                onToggled: Plasmoid.configuration.showNetwork = checked
                 text: i18n("Network")
             }
         }
