@@ -85,7 +85,7 @@ KCM.SimpleKCM {
             RowLayout {
                 spacing: 4
                 CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryCapacity; onToggled: Plasmoid.configuration.showBatteryCapacity = checked }
-                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                CheckBox { checked: Plasmoid.configuration.taskbarBattery; onToggled: Plasmoid.configuration.taskbarBattery = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Capacity") }
             }
             RowLayout {
@@ -111,12 +111,6 @@ KCM.SimpleKCM {
                 CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryStatus;  onToggled: Plasmoid.configuration.showBatteryStatus = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Status") }
-            }
-            RowLayout {
-                spacing: 4
-                CheckBox { visible: false; Layout.preferredWidth: 32 }
-                CheckBox { checked: Plasmoid.configuration.taskbarBattery; onToggled: Plasmoid.configuration.taskbarBattery = checked; Layout.preferredWidth: 16 }
-                Label { text: i18n("Show battery % in taskbar"); opacity: 0.7 }
             }
         }
 
@@ -146,7 +140,12 @@ KCM.SimpleKCM {
                             Plasmoid.configuration.hiddenCpuSensors = list
                         }
                     }
-                    Item { Layout.preferredWidth: 16 }
+                    CheckBox {
+                        visible: index === 0
+                        checked: Plasmoid.configuration.taskbarCpuTemp
+                        onToggled: Plasmoid.configuration.taskbarCpuTemp = checked
+                        Layout.preferredWidth: 16
+                    }
                     Label { text: modelData }
                 }
             }
@@ -161,11 +160,6 @@ KCM.SimpleKCM {
                 CheckBox { visible: Plasmoid.configuration.showCpu; checked: Plasmoid.configuration.showCpuFreq;  onToggled: Plasmoid.configuration.showCpuFreq = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarCpuFreq; onToggled: Plasmoid.configuration.taskbarCpuFreq = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Frequency") }
-            }
-            RowLayout {
-                spacing: 4
-                CheckBox { checked: Plasmoid.configuration.taskbarCpuTemp; onToggled: Plasmoid.configuration.taskbarCpuTemp = checked; Layout.preferredWidth: 16 }
-                Label { text: i18n("Show CPU temp in taskbar"); opacity: 0.7; Layout.leftMargin: 36 }
             }
         }
 
@@ -195,7 +189,12 @@ KCM.SimpleKCM {
                             Plasmoid.configuration.hiddenGpuSensors = list
                         }
                     }
-                    Item { Layout.preferredWidth: 16 }
+                    CheckBox {
+                        visible: index === 0
+                        checked: Plasmoid.configuration.taskbarGpuTemp
+                        onToggled: Plasmoid.configuration.taskbarGpuTemp = checked
+                        Layout.preferredWidth: 16
+                    }
                     Label { text: modelData }
                 }
             }
@@ -210,11 +209,6 @@ KCM.SimpleKCM {
                 CheckBox { visible: Plasmoid.configuration.showGpu; checked: Plasmoid.configuration.showGpuVram; onToggled: Plasmoid.configuration.showGpuVram = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarVram; onToggled: Plasmoid.configuration.taskbarVram = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("VRAM") }
-            }
-            RowLayout {
-                spacing: 4
-                CheckBox { checked: Plasmoid.configuration.taskbarGpuTemp; onToggled: Plasmoid.configuration.taskbarGpuTemp = checked; Layout.preferredWidth: 16 }
-                Label { text: i18n("Show GPU temp in taskbar"); opacity: 0.7; Layout.leftMargin: 36 }
             }
         }
 
