@@ -33,7 +33,7 @@ KCM.SimpleKCM {
                     fan.push(k.substring(4).replace(/_/g, " "))
                 }
             }
-            cpuSensors = cpu
+            cpuSensors = sortCpuSensors(cpu)
             gpuSensors = gpu
             fanSensors = fan
             disconnectSource(sourceName)
@@ -49,6 +49,19 @@ KCM.SimpleKCM {
         if (idx >= 0) list.splice(idx, 1)
         else list.push(item)
         return list
+    }
+
+    function sortCpuSensors(items) {
+        var pkg = [], rest = []
+        for (var i = 0; i < items.length; i++) {
+            var ll = items[i].toLowerCase()
+            if (ll.indexOf("package") >= 0 || ll.indexOf("tdie") >= 0 || ll.indexOf("tctl") >= 0)
+                pkg.push(items[i])
+            else
+                rest.push(items[i])
+        }
+        rest.sort(function(a, b) { return a.localeCompare(b) })
+        return pkg.concat(rest)
     }
 
     ColumnLayout {
