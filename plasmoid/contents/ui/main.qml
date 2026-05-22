@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
@@ -382,269 +383,292 @@ PlasmoidItem {
     // ══════════════════════════════════════════════════════════════════════
     // FULL — popup or desktop widget
     // ══════════════════════════════════════════════════════════════════════
-    fullRepresentation: ColumnLayout {
-        id: fullRepRoot
-
-        // Size hints used by both the panel popup and the desktop container.
-        // We bind preferred sizes to the natural implicit sizes of the
-        // ColumnLayout so the widget follows its real content (which grows
-        // when battery/GPU/fan sections become visible). Adding +16 on the
-        // height adds a small bottom padding so the legend isn't glued to
-        // the edge of the panel background.
+    fullRepresentation: Flickable {
+        id: flick
         Layout.minimumWidth:    280
-        Layout.minimumHeight:   implicitHeight
-        Layout.preferredWidth:  Math.max(implicitWidth + 24, 300)
-        Layout.preferredHeight: implicitHeight + 16
-        spacing: 5
+        Layout.preferredWidth:  Math.max(col.implicitWidth + 24, 300)
+        Layout.preferredHeight: Math.min(col.implicitHeight + 16, 400)
+        clip: true
+        contentHeight: col.implicitHeight
+        contentWidth: width
+        boundsBehavior: Flickable.StopAtBounds
+        ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
 
-        // ── Header ──────────────────────────────────────────────────────
-        PlasmaComponents.Label {
-            Layout.fillWidth: true
-            text: "Monitor"
-            font.pixelSize: 15; font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-        }
+        property bool cpuCoresExpanded: true
 
-        // ── BATTERY (hidden on desktop PCs without a battery) ────────────
         ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
-            visible: root.hasBattery && Plasmoid.configuration.showBattery
+            id: col
+            width: flick.width
+            spacing: 5
 
-            Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-            PlasmaComponents.Label { text: "Battery"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
+            // ── Header ──────────────────────────────────────────────────────
+            PlasmaComponents.Label {
+                Layout.fillWidth: true
+                text: "Monitor"
+                font.pixelSize: 15; font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+            }
 
+            // ── BATTERY (hidden on desktop PCs without a battery) ────────────
             ColumnLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                Layout.fillWidth: true
                 spacing: 3
+                visible: root.hasBattery && Plasmoid.configuration.showBattery
 
-                RowLayout {
-                    visible: Plasmoid.configuration.showBatteryCycles
-                    spacing: 8
-                    PlasmaComponents.Label { text: "Cycles";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: root.cycles; font.bold: true; font.pixelSize: 12 }
-                }
-                RowLayout {
-                    visible: Plasmoid.configuration.showBatteryCapacity
-                    spacing: 8
-                    PlasmaComponents.Label { text: "Capacity"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: root.capacity + "%"; font.bold: true; font.pixelSize: 12 }
-                }
-                RowLayout {
-                    visible: Plasmoid.configuration.showBatteryHealth
-                    spacing: 8
-                    PlasmaComponents.Label { text: "Health";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: root.healthPercent + "%"; font.bold: true; font.pixelSize: 12; color: healthColor() }
-                }
-                RowLayout {
-                    visible: Plasmoid.configuration.showBatteryEnergy
-                    spacing: 8
-                    PlasmaComponents.Label { text: root.batUnit === "mAh" ? "Charge" : "Energy"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label {
-                        text: {
-                            var d = root.batUnit === "mAh" ? 1000 : 1e6
-                            ; (parseFloat(root.energyFull)/d).toFixed(1) + " / " + (parseFloat(root.energyFullDesign)/d).toFixed(1) + " " + root.batUnit
+                Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
+                PlasmaComponents.Label { text: "Battery"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
+
+                ColumnLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    spacing: 3
+
+                    RowLayout {
+                        visible: Plasmoid.configuration.showBatteryCycles
+                        spacing: 8
+                        PlasmaComponents.Label { text: "Cycles";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: root.cycles; font.bold: true; font.pixelSize: 12 }
+                    }
+                    RowLayout {
+                        visible: Plasmoid.configuration.showBatteryCapacity
+                        spacing: 8
+                        PlasmaComponents.Label { text: "Capacity"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: root.capacity + "%"; font.bold: true; font.pixelSize: 12 }
+                    }
+                    RowLayout {
+                        visible: Plasmoid.configuration.showBatteryHealth
+                        spacing: 8
+                        PlasmaComponents.Label { text: "Health";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: root.healthPercent + "%"; font.bold: true; font.pixelSize: 12; color: healthColor() }
+                    }
+                    RowLayout {
+                        visible: Plasmoid.configuration.showBatteryEnergy
+                        spacing: 8
+                        PlasmaComponents.Label { text: root.batUnit === "mAh" ? "Charge" : "Energy"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label {
+                            text: {
+                                var d = root.batUnit === "mAh" ? 1000 : 1e6
+                                ; (parseFloat(root.energyFull)/d).toFixed(1) + " / " + (parseFloat(root.energyFullDesign)/d).toFixed(1) + " " + root.batUnit
+                            }
+                            font.bold: true; font.pixelSize: 12
                         }
-                        font.bold: true; font.pixelSize: 12
+                    }
+                    RowLayout {
+                        visible: Plasmoid.configuration.showBatteryVoltage
+                        spacing: 8
+                        PlasmaComponents.Label { text: "Voltage";  opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: root.batteryVoltage + " V"; font.bold: true; font.pixelSize: 12 }
+                    }
+                    RowLayout {
+                        visible: Plasmoid.configuration.showBatteryStatus
+                        spacing: 8
+                        PlasmaComponents.Label { text: "Status";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: root.batteryStatus; font.bold: true; font.pixelSize: 12; color: statusColor() }
                     }
                 }
-                RowLayout {
-                    visible: Plasmoid.configuration.showBatteryVoltage
-                    spacing: 8
-                    PlasmaComponents.Label { text: "Voltage";  opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: root.batteryVoltage + " V"; font.bold: true; font.pixelSize: 12 }
-                }
-                RowLayout {
-                    visible: Plasmoid.configuration.showBatteryStatus
-                    spacing: 8
-                    PlasmaComponents.Label { text: "Status";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: root.batteryStatus; font.bold: true; font.pixelSize: 12; color: statusColor() }
+
+                Item {
+                    Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
+                    Rectangle {
+                        width: parent.width * Math.min(parseFloat(root.healthPercent), 100) / 100
+                        height: parent.height; radius: 3; color: healthColor(); opacity: 0.7
+                        Behavior on width { NumberAnimation { duration: 400 } }
+                    }
+                    PlasmaComponents.Label { anchors.centerIn: parent; text: "Health: " + root.healthPercent + "%"; font.pixelSize: 10; font.bold: true }
                 }
             }
 
-            Item {
-                Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
-                Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
-                Rectangle {
-                    width: parent.width * Math.min(parseFloat(root.healthPercent), 100) / 100
-                    height: parent.height; radius: 3; color: healthColor(); opacity: 0.7
-                    Behavior on width { NumberAnimation { duration: 400 } }
-                }
-                PlasmaComponents.Label { anchors.centerIn: parent; text: "Health: " + root.healthPercent + "%"; font.pixelSize: 10; font.bold: true }
-            }
-        }
+            // ── CPU ─────────────────────────────────────────────────────────
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 3
+                visible: Plasmoid.configuration.showCpu
 
-        // ── CPU ─────────────────────────────────────────────────────────
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
-            visible: Plasmoid.configuration.showCpu
+                Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
 
-            Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-            PlasmaComponents.Label { text: "CPU"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
-
-            Repeater {
-                model: cpuTempsModel
-                delegate: RowLayout {
-                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                    PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                RowLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 8
+                    spacing: 4
+                    PlasmaComponents.Label { text: "CPU"; font.pixelSize: 13; font.bold: true; Layout.fillWidth: true }
                     PlasmaComponents.Label {
-                        text: model.value + "°C" + tempLevel(model.value)
-                        font.bold: true; font.pixelSize: 12; color: model.color
+                        text: flick.cpuCoresExpanded ? "▲" : "▼"
+                        font.pixelSize: 10; opacity: 0.5
+                        MouseArea {
+                            anchors.fill: parent
+                            anchors.margins: -4
+                            onClicked: flick.cpuCoresExpanded = !flick.cpuCoresExpanded
+                        }
                     }
                 }
-            }
 
-            RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showCpuLoad
-                PlasmaComponents.Label { text: "Load";      opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label { text: root.cpuLoad + "%"; font.bold: true; font.pixelSize: 12; color: cpuLoadColor(root.cpuLoad) }
-            }
-            RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showCpuFreq
-                PlasmaComponents.Label { text: "Frequency"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label { text: root.cpuFreq + " GHz"; font.bold: true; font.pixelSize: 12; color: "#60a5fa" }
-            }
-        }
+                ColumnLayout {
+                    visible: flick.cpuCoresExpanded
+                    spacing: 3; Layout.fillWidth: true
 
-        // ── GPU ───────────────────────────────────────────────────
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
-            visible: root.hasGpuData && Plasmoid.configuration.showGpu
+                    Repeater {
+                        model: cpuTempsModel
+                        delegate: RowLayout {
+                            Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                            PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                            PlasmaComponents.Label {
+                                text: model.value + "°C" + tempLevel(model.value)
+                                font.bold: true; font.pixelSize: 12; color: model.color
+                            }
+                        }
+                    }
+                }
 
-            Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-            PlasmaComponents.Label { text: "GPU"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
-
-            Repeater {
-                model: gpuTempsModel
-                delegate: RowLayout {
+                RowLayout {
                     Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                    PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: model.value + "°C"; font.bold: true; font.pixelSize: 12; color: model.color }
+                    visible: Plasmoid.configuration.showCpuLoad
+                    PlasmaComponents.Label { text: "Load";      opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label { text: root.cpuLoad + "%"; font.bold: true; font.pixelSize: 12; color: cpuLoadColor(root.cpuLoad) }
                 }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: root.gpuLoad !== "—" && Plasmoid.configuration.showGpuLoad
-                PlasmaComponents.Label { text: "Load"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label { text: root.gpuLoad + "%"; font.bold: true; font.pixelSize: 12; color: cpuLoadColor(parseInt(root.gpuLoad)) }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.showGpuVram
-                PlasmaComponents.Label { text: "VRAM"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label {
-                    text: root.gpuMemUsed + " / " + root.gpuMemTotal + " MiB"
-                    font.bold: true; font.pixelSize: 12; color: ramColor(root.gpuMemUsed, root.gpuMemTotal)
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.showGpuVram
-                Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
-                Rectangle {
-                    width: {
-                        var u = parseInt(root.gpuMemUsed); var t = parseInt(root.gpuMemTotal)
-                        return (isNaN(u) || isNaN(t) || t === 0) ? 0 : parent.width * Math.min(u, t) / t
-                    }
-                    height: parent.height; radius: 3; color: ramColor(root.gpuMemUsed, root.gpuMemTotal); opacity: 0.7
-                    Behavior on width { NumberAnimation { duration: 400 } }
-                }
-                PlasmaComponents.Label { anchors.centerIn: parent; text: "VRAM: " + gpuMemPct() + "%"; font.pixelSize: 10; font.bold: true }
-            }
-        }
-
-        // ── RAM ─────────────────────────────────────────────────────────
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
-            visible: Plasmoid.configuration.showRam
-
-            Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-            PlasmaComponents.Label { text: "RAM"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
-
-            RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showRamUsed
-                PlasmaComponents.Label { text: "Used"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label {
-                    text: ramGb(root.ramUsed) + " / " + ramGb(root.ramTotal) + " GB"
-                    font.bold: true; font.pixelSize: 12; color: ramColor(root.ramUsed, root.ramTotal)
-                }
-            }
-
-            Item {
-                Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showRamBar
-                Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
-                Rectangle {
-                    width: {
-                        var u = parseInt(root.ramUsed); var t = parseInt(root.ramTotal)
-                        return (isNaN(u) || isNaN(t) || t === 0) ? 0 : parent.width * Math.min(u, t) / t
-                    }
-                    height: parent.height; radius: 3; color: ramColor(root.ramUsed, root.ramTotal); opacity: 0.7
-                    Behavior on width { NumberAnimation { duration: 400 } }
-                }
-                PlasmaComponents.Label { anchors.centerIn: parent; text: "RAM: " + ramPct() + "%"; font.pixelSize: 10; font.bold: true }
-            }
-        }
-
-        // ── FANS (hidden if no fan sensors found) ────────────────────────
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
-            visible: fanModel.count > 0 && Plasmoid.configuration.showFans
-
-            Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-            PlasmaComponents.Label { text: "Fans"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
-
-            Repeater {
-                model: fanModel
-                delegate: RowLayout {
+                RowLayout {
                     Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                    PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: model.value + " RPM"; font.bold: true; font.pixelSize: 12; color: model.color }
+                    visible: Plasmoid.configuration.showCpuFreq
+                    PlasmaComponents.Label { text: "Frequency"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label { text: root.cpuFreq + " GHz"; font.bold: true; font.pixelSize: 12; color: "#60a5fa" }
                 }
             }
-        }
 
-        // ── NETWORK ──────────────────────────────────────────────────────
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 3
-            visible: Plasmoid.configuration.showNetwork
+            // ── GPU ───────────────────────────────────────────────────
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 3
+                visible: root.hasGpuData && Plasmoid.configuration.showGpu
 
+                Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
+                PlasmaComponents.Label { text: "GPU"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
+
+                Repeater {
+                    model: gpuTempsModel
+                    delegate: RowLayout {
+                        Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                        PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: model.value + "°C"; font.bold: true; font.pixelSize: 12; color: model.color }
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: root.gpuLoad !== "—" && Plasmoid.configuration.showGpuLoad
+                    PlasmaComponents.Label { text: "Load"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label { text: root.gpuLoad + "%"; font.bold: true; font.pixelSize: 12; color: cpuLoadColor(parseInt(root.gpuLoad)) }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.showGpuVram
+                    PlasmaComponents.Label { text: "VRAM"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label {
+                        text: root.gpuMemUsed + " / " + root.gpuMemTotal + " MiB"
+                        font.bold: true; font.pixelSize: 12; color: ramColor(root.gpuMemUsed, root.gpuMemTotal)
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.showGpuVram
+                    Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
+                    Rectangle {
+                        width: {
+                            var u = parseInt(root.gpuMemUsed); var t = parseInt(root.gpuMemTotal)
+                            return (isNaN(u) || isNaN(t) || t === 0) ? 0 : parent.width * Math.min(u, t) / t
+                        }
+                        height: parent.height; radius: 3; color: ramColor(root.gpuMemUsed, root.gpuMemTotal); opacity: 0.7
+                        Behavior on width { NumberAnimation { duration: 400 } }
+                    }
+                    PlasmaComponents.Label { anchors.centerIn: parent; text: "VRAM: " + gpuMemPct() + "%"; font.pixelSize: 10; font.bold: true }
+                }
+            }
+
+            // ── RAM ─────────────────────────────────────────────────────────
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 3
+                visible: Plasmoid.configuration.showRam
+
+                Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
+                PlasmaComponents.Label { text: "RAM"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
+
+                RowLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: Plasmoid.configuration.showRamUsed
+                    PlasmaComponents.Label { text: "Used"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label {
+                        text: ramGb(root.ramUsed) + " / " + ramGb(root.ramTotal) + " GB"
+                        font.bold: true; font.pixelSize: 12; color: ramColor(root.ramUsed, root.ramTotal)
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: Plasmoid.configuration.showRamBar
+                    Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
+                    Rectangle {
+                        width: {
+                            var u = parseInt(root.ramUsed); var t = parseInt(root.ramTotal)
+                            return (isNaN(u) || isNaN(t) || t === 0) ? 0 : parent.width * Math.min(u, t) / t
+                        }
+                        height: parent.height; radius: 3; color: ramColor(root.ramUsed, root.ramTotal); opacity: 0.7
+                        Behavior on width { NumberAnimation { duration: 400 } }
+                    }
+                    PlasmaComponents.Label { anchors.centerIn: parent; text: "RAM: " + ramPct() + "%"; font.pixelSize: 10; font.bold: true }
+                }
+            }
+
+            // ── FANS (hidden if no fan sensors found) ────────────────────────
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 3
+                visible: fanModel.count > 0 && Plasmoid.configuration.showFans
+
+                Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
+                PlasmaComponents.Label { text: "Fans"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
+
+                Repeater {
+                    model: fanModel
+                    delegate: RowLayout {
+                        Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                        PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                        PlasmaComponents.Label { text: model.value + " RPM"; font.bold: true; font.pixelSize: 12; color: model.color }
+                    }
+                }
+            }
+
+            // ── NETWORK ──────────────────────────────────────────────────────
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 3
+                visible: Plasmoid.configuration.showNetwork
+
+                Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
+                PlasmaComponents.Label { text: "Network"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
+
+                RowLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: Plasmoid.configuration.showNetDown
+                    PlasmaComponents.Label { text: "Download"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label { text: netSpeed(root.netDown); font.bold: true; font.pixelSize: 12; color: "#60a5fa" }
+                }
+                RowLayout {
+                    Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                    visible: Plasmoid.configuration.showNetUp
+                    PlasmaComponents.Label { text: "Upload"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                    PlasmaComponents.Label { text: netSpeed(root.netUp); font.bold: true; font.pixelSize: 12; color: "#4ade80" }
+                }
+            }
+
+            // ── Legend ───────────────────────────────────────────────────────
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-            PlasmaComponents.Label { text: "Network"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
-
             RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showNetDown
-                PlasmaComponents.Label { text: "Download"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label { text: netSpeed(root.netDown); font.bold: true; font.pixelSize: 12; color: "#60a5fa" }
-            }
-            RowLayout {
-                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showNetUp
-                PlasmaComponents.Label { text: "Upload"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
-                PlasmaComponents.Label { text: netSpeed(root.netUp); font.bold: true; font.pixelSize: 12; color: "#4ade80" }
+                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12; spacing: 12
+                PlasmaComponents.Label { text: "OK";    font.pixelSize: 10; color: "#4ade80" }
+                PlasmaComponents.Label { text: "Warm";  font.pixelSize: 10; color: "#fbbf24" }
+                PlasmaComponents.Label { text: "High";  font.pixelSize: 10; color: "#f97316" }
+                PlasmaComponents.Label { text: "Danger"; font.pixelSize: 10; color: "#ef4444" }
             }
         }
-
-        // ── Legend ───────────────────────────────────────────────────────
-        Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
-        RowLayout {
-            Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12; spacing: 12
-            PlasmaComponents.Label { text: "OK";    font.pixelSize: 10; color: "#4ade80" }
-            PlasmaComponents.Label { text: "Warm";  font.pixelSize: 10; color: "#fbbf24" }
-            PlasmaComponents.Label { text: "High";  font.pixelSize: 10; color: "#f97316" }
-            PlasmaComponents.Label { text: "Danger"; font.pixelSize: 10; color: "#ef4444" }
-        }
-    } // end Plasmoid.fullRepresentation ColumnLayout
+    } // end Plasmoid.fullRepresentation
 }
