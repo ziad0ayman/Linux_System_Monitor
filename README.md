@@ -1,63 +1,74 @@
-# ASUS UX510 Monitor — KDE Plasma Widget
+# Linux System Monitor — KDE Plasma Widget
 
-A KDE Plasma 5 widget that monitors battery health, CPU temperatures, fan speeds and other sensors on the ASUS UX510UWK laptop.
+A KDE Plasma 6 widget for monitoring system hardware: CPU, GPU, RAM, fans, battery, and network.
+
+Forked and ported from [asus-ux510-monitor](https://github.com/nhilo94/asus-ux510-monitor) by Nhilo94.
 
 ## What it shows
 
 | Section | Sensors |
 |---------|---------|
 | **Battery** | Cycles, capacity %, health %, energy (Wh), voltage, charge status |
-| **CPU** | Package temp, Core 0, Core 1 (via `coretemp` hwmon) |
-| **Fans** | CPU fan RPM (via `asus` hwmon), GPU fan status |
-| **Other** | ACPI chassis temp, PCH chipset temp, WiFi adapter temp |
+| **CPU** | Per-core temps, load %, frequency (via `coretemp`/`k10temp` hwmon) |
+| **GPU** | Temp, load %, VRAM used/total (via `nvidia-smi`) |
+| **RAM** | Used / total with usage bar |
+| **Fans** | CPU/GPU fan RPM (via `asus` hwmon) |
+| **Network** | Download / upload speed (auto-detects active interface) |
 
-Color-coded thresholds: green (OK), yellow (warm), orange (high), red (danger).
+All sections can be shown/hidden via the configuration dialog. CPU and GPU sensors can be individually toggled.
 
-## Panel vs Desktop
+## Changes from upstream
 
-- **Panel**: compact icon with CPU temperature. Click to open the full popup.
-- **Desktop**: full widget displayed directly.
+- **KDE Plasma 6** — ported from Plasma 5 (PlasmoidItem, plasma5support DataSource, Kirigami.Icon, kpackagetool6)
+- **NVIDIA GPU stats** — load %, VRAM usage, temperature (requires `nvidia-smi`)
+- **Network speed** — real-time download/upload via sysfs counters
+- **Configurable sections** — toggle Battery, CPU cores, GPU sensors, Fans, Network individually
+- **CPU sensor sorting** — package temp first, then alphabetical cores
+- **Cleaner UI** — no emojis, percentage bars for VRAM/RAM, compact panel display
 
 ## Install
 
 ```bash
-git clone https://github.com/nhilo94/asus-ux510-monitor.git
-cd asus-ux510-monitor
+git clone https://github.com/ziad0ayman/Linux_System_Monitor.git
+cd Linux_System_Monitor
 bash install.sh
 ```
 
-Then right-click your panel, **Add Widgets**, search for **"ASUS UX510 Monitor"**.
+Then right-click panel → **Add Widgets** → search for **"Monitor"**.
 
 ## Uninstall
 
 ```bash
-plasmapkg2 -r com.asus.batterymonitor
+kpackagetool6 -t Plasma/Applet -r com.github.nhilo94.pcmonitor
 ```
+
+## Requirements
+
+- **KDE Plasma 6** (Plasma 5 is **not** supported)
+- **nvidia-smi** (for GPU stats — optional, GPU section hides automatically if unavailable)
 
 ## Structure
 
 ```
-asus-ux510-monitor/
-├── plasmoid/                    # KDE Plasma widget package
-│   ├── metadata.desktop         # Widget metadata
-│   └── contents/
-│       └── ui/
-│           └── main.qml         # Widget UI and logic
-├── install.sh                   # Install/update script
+Linux_System_Monitor/
+├── plasmoid/
+│   ├── metadata.json               # Widget metadata (Plasma 6)
+│   ├── contents/
+│   │   ├── config/
+│   │   │   ├── main.xml            # KConfig XT schema
+│   │   │   └── config.qml          # Config tab definition
+│   │   ├── code/
+│   │   │   └── monitor.sh          # Sensor polling script
+│   │   └── ui/
+│   │       ├── main.qml            # Widget UI and logic
+│   │       └── config/
+│   │           └── ConfigGeneral.qml # Configuration page
+│   └── metadata.desktop            # Legacy metadata (Plasma 5 compat)
+├── install.sh                      # Install/update script
 ├── LICENSE
 └── README.md
 ```
 
-## Compatibility
-
-- **Hardware**: ASUS UX510UWK (should work on similar ASUS laptops with minor adjustments)
-- **OS**: Debian 12 (Bookworm) / KDE Plasma 5
-- **Dependencies**: None beyond a standard KDE Plasma desktop
-
-## Related
-
-- [asus-ux510-fan2](https://github.com/nhilo94/asus-ux510-fan2) — Hidden GPU fan controller for the same laptop
-
 ## License
 
-MIT
+MIT — original by Fanilo Rakotovao (Nhilo94), modified by Ziad Ayman.
