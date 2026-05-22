@@ -8,27 +8,72 @@
   <group name="General">
     <entry name="showBattery" type="Bool">
       <default>true</default>
-      <label>Show battery section</label>
     </entry>
-    <entry name="showGpu" type="Bool">
+    <entry name="showBatteryCycles" type="Bool">
       <default>true</default>
-      <label>Show GPU section</label>
     </entry>
-    <entry name="showFans" type="Bool">
+    <entry name="showBatteryCapacity" type="Bool">
       <default>true</default>
-      <label>Show fans section</label>
     </entry>
-    <entry name="showNetwork" type="Bool">
+    <entry name="showBatteryHealth" type="Bool">
       <default>true</default>
-      <label>Show network section</label>
+    </entry>
+    <entry name="showBatteryEnergy" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showBatteryVoltage" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showBatteryStatus" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showCpu" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showCpuLoad" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showCpuFreq" type="Bool">
+      <default>true</default>
     </entry>
     <entry name="hiddenCpuSensors" type="StringList">
       <default></default>
-      <label>Sensors to hide in the CPU section</label>
+    </entry>
+    <entry name="showGpu" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showGpuLoad" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showGpuVram" type="Bool">
+      <default>true</default>
     </entry>
     <entry name="hiddenGpuSensors" type="StringList">
       <default></default>
-      <label>Sensors to hide in the GPU section</label>
+    </entry>
+    <entry name="showRam" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showRamUsed" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showRamBar" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showFans" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="hiddenFanSensors" type="StringList">
+      <default></default>
+    </entry>
+    <entry name="showNetwork" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showNetDown" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showNetUp" type="Bool">
+      <default>true</default>
     </entry>
   </group>
 </kcfg>

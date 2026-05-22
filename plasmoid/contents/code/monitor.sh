@@ -121,7 +121,7 @@ if command -v nvidia-smi &>/dev/null; then
     [ -n "$gload" ]      && echo "GPULOAD=${gload}"
     [ -n "$gmemused" ]   && echo "GPUMEMUSED=${gmemused}"
     [ -n "$gmemtotal" ]  && echo "GPUMEMTOTAL=${gmemtotal}"
-    [ -n "$gtemp" ]      && echo "GPUTEMP_NVIDIA=$((gtemp * 1000))"
+    [ -n "$gtemp" ]      && echo "GPUTEMP_Temp=$((gtemp * 1000))"
 fi
 
 # ── NETWORK speed (diff /sys/class/net counters) ───────────────────────────
