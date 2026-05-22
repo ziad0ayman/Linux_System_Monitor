@@ -287,13 +287,6 @@ PlasmoidItem {
                     PlasmaComponents.Label { text: ramGb(root.ramUsed) + "G"; font.pixelSize: 12; font.bold: true; color: parent.c }
                 }
 
-                // Battery %
-                PlasmaComponents.Label {
-                    text: root.capacity + "%"
-                    font.pixelSize: 12; font.bold: true; color: "#4ade80"
-                    visible: root.hasBattery && Plasmoid.configuration.taskbarBattery
-                }
-
                 // GPU Temp
                 PlasmaComponents.Label {
                     text: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).value + "°" : ""
