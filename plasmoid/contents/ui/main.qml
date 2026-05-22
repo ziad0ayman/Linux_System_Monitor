@@ -9,6 +9,14 @@ import org.kde.kirigami as Kirigami
 PlasmoidItem {
     id: root
 
+    // ── KConfig XT defaults helper ───────────────────────────────────────
+    // XML defaults are NOT applied by Plasmoid.configuration in QML for
+    // unsaved keys.  This helper returns `true` when the value is undefined.
+    function boolCfg(key) {
+        var v = Plasmoid.configuration[key];
+        return v !== undefined && v !== null ? v : true;
+    }
+
     // ── Static properties ─────────────────────────────────────────────────
     property bool   hasBattery:        false
     property string cycles:            "—"
@@ -319,7 +327,7 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 3
-            visible: root.hasBattery && Plasmoid.configuration.showBattery
+            visible: root.hasBattery && boolCfg("showBattery")
 
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
             PlasmaComponents.Label { text: "Battery"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
@@ -329,25 +337,25 @@ PlasmoidItem {
                 spacing: 3
 
                 RowLayout {
-                    visible: Plasmoid.configuration.showBatteryCycles
+                    visible: boolCfg("showBatteryCycles")
                     spacing: 8
                     PlasmaComponents.Label { text: "Cycles";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                     PlasmaComponents.Label { text: root.cycles; font.bold: true; font.pixelSize: 12 }
                 }
                 RowLayout {
-                    visible: Plasmoid.configuration.showBatteryCapacity
+                    visible: boolCfg("showBatteryCapacity")
                     spacing: 8
                     PlasmaComponents.Label { text: "Capacity"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                     PlasmaComponents.Label { text: root.capacity + "%"; font.bold: true; font.pixelSize: 12 }
                 }
                 RowLayout {
-                    visible: Plasmoid.configuration.showBatteryHealth
+                    visible: boolCfg("showBatteryHealth")
                     spacing: 8
                     PlasmaComponents.Label { text: "Health";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                     PlasmaComponents.Label { text: root.healthPercent + "%"; font.bold: true; font.pixelSize: 12; color: healthColor() }
                 }
                 RowLayout {
-                    visible: Plasmoid.configuration.showBatteryEnergy
+                    visible: boolCfg("showBatteryEnergy")
                     spacing: 8
                     PlasmaComponents.Label { text: "Energy";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                     PlasmaComponents.Label {
@@ -356,13 +364,13 @@ PlasmoidItem {
                     }
                 }
                 RowLayout {
-                    visible: Plasmoid.configuration.showBatteryVoltage
+                    visible: boolCfg("showBatteryVoltage")
                     spacing: 8
                     PlasmaComponents.Label { text: "Voltage";  opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                     PlasmaComponents.Label { text: root.batteryVoltage + " V"; font.bold: true; font.pixelSize: 12 }
                 }
                 RowLayout {
-                    visible: Plasmoid.configuration.showBatteryStatus
+                    visible: boolCfg("showBatteryStatus")
                     spacing: 8
                     PlasmaComponents.Label { text: "Status";   opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                     PlasmaComponents.Label { text: root.batteryStatus; font.bold: true; font.pixelSize: 12; color: statusColor() }
@@ -385,7 +393,7 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 3
-            visible: Plasmoid.configuration.showCpu
+            visible: boolCfg("showCpu")
 
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
             PlasmaComponents.Label { text: "CPU"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
@@ -404,13 +412,13 @@ PlasmoidItem {
 
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showCpuLoad
+                visible: boolCfg("showCpuLoad")
                 PlasmaComponents.Label { text: "Load";      opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label { text: root.cpuLoad + "%"; font.bold: true; font.pixelSize: 12; color: cpuLoadColor(root.cpuLoad) }
             }
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showCpuFreq
+                visible: boolCfg("showCpuFreq")
                 PlasmaComponents.Label { text: "Frequency"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label { text: root.cpuFreq + " GHz"; font.bold: true; font.pixelSize: 12; color: "#60a5fa" }
             }
@@ -420,7 +428,7 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 3
-            visible: root.hasGpuData && Plasmoid.configuration.showGpu
+            visible: root.hasGpuData && boolCfg("showGpu")
 
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
             PlasmaComponents.Label { text: "GPU"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
@@ -436,14 +444,14 @@ PlasmoidItem {
 
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: root.gpuLoad !== "—" && Plasmoid.configuration.showGpuLoad
+                visible: root.gpuLoad !== "—" && boolCfg("showGpuLoad")
                 PlasmaComponents.Label { text: "Load"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label { text: root.gpuLoad + "%"; font.bold: true; font.pixelSize: 12; color: cpuLoadColor(parseInt(root.gpuLoad)) }
             }
 
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.showGpuVram
+                visible: parseInt(root.gpuMemTotal) > 0 && boolCfg("showGpuVram")
                 PlasmaComponents.Label { text: "VRAM"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label {
                     text: root.gpuMemUsed + " / " + root.gpuMemTotal + " MiB"
@@ -453,7 +461,7 @@ PlasmoidItem {
 
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.showGpuVram
+                visible: parseInt(root.gpuMemTotal) > 0 && boolCfg("showGpuVram")
                 Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
                 Rectangle {
                     width: {
@@ -471,14 +479,14 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 3
-            visible: Plasmoid.configuration.showRam
+            visible: boolCfg("showRam")
 
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
             PlasmaComponents.Label { text: "RAM"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
 
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showRamUsed
+                visible: boolCfg("showRamUsed")
                 PlasmaComponents.Label { text: "Used"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label {
                     text: ramGb(root.ramUsed) + " / " + ramGb(root.ramTotal) + " GB"
@@ -488,7 +496,7 @@ PlasmoidItem {
 
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 16; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showRamBar
+                visible: boolCfg("showRamBar")
                 Rectangle { anchors.fill: parent; radius: 3; color: PlasmaCore.Theme.textColor; opacity: 0.08 }
                 Rectangle {
                     width: {
@@ -506,7 +514,7 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 3
-            visible: fanModel.count > 0 && Plasmoid.configuration.showFans
+            visible: fanModel.count > 0 && boolCfg("showFans")
 
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
             PlasmaComponents.Label { text: "Fans"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
@@ -525,20 +533,20 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 3
-            visible: Plasmoid.configuration.showNetwork
+            visible: boolCfg("showNetwork")
 
             Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
             PlasmaComponents.Label { text: "Network"; font.pixelSize: 13; font.bold: true; Layout.leftMargin: 8 }
 
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showNetDown
+                visible: boolCfg("showNetDown")
                 PlasmaComponents.Label { text: "Download"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label { text: netSpeed(root.netDown); font.bold: true; font.pixelSize: 12; color: "#60a5fa" }
             }
             RowLayout {
                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
-                visible: Plasmoid.configuration.showNetUp
+                visible: boolCfg("showNetUp")
                 PlasmaComponents.Label { text: "Upload"; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                 PlasmaComponents.Label { text: netSpeed(root.netUp); font.bold: true; font.pixelSize: 12; color: "#4ade80" }
             }
