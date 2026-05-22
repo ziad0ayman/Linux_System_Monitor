@@ -392,7 +392,13 @@ PlasmoidItem {
         contentHeight: col.implicitHeight
         contentWidth: width
         boundsBehavior: Flickable.StopAtBounds
-        ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            width: 4
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+        }
 
         property bool cpuCoresExpanded: true
 
@@ -487,7 +493,7 @@ PlasmoidItem {
                 Rectangle { Layout.fillWidth: true; height: 1; color: PlasmaCore.Theme.textColor; opacity: 0.15 }
 
                 RowLayout {
-                    Layout.fillWidth: true; Layout.leftMargin: 8
+                    Layout.fillWidth: true; Layout.leftMargin: 8; Layout.rightMargin: 8
                     spacing: 4
                     PlasmaComponents.Label { text: "CPU"; font.pixelSize: 13; font.bold: true; Layout.fillWidth: true }
                     PlasmaComponents.Label {
