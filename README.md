@@ -15,7 +15,7 @@ Forked and ported from [asus-ux510-monitor](https://github.com/nhilo94/asus-ux51
 | **Fans** | CPU/GPU fan RPM (via `asus` hwmon) |
 | **Network** | Download / upload speed (auto-detects active interface) |
 
-Every section and sub-item can be individually shown/hidden via the configuration dialog. Dynamic sensor lists (CPU cores, GPU sensors, fans) have per-sensor toggles.
+Every section and sub-item can be individually shown/hidden in the popup ("Show" column) or pinned to the panel taskbar ("Bar" column) via the configuration dialog. Dynamic sensor lists (CPU cores, GPU sensors, fans) have per-sensor toggles. Taskbar toggles remain accessible even when a popup section is turned off.
 
 ## Changes from upstream
 
@@ -23,7 +23,8 @@ Every section and sub-item can be individually shown/hidden via the configuratio
 - **NVIDIA GPU stats** — load %, VRAM usage, temperature (requires `nvidia-smi`)
 - **Network speed** — real-time download/upload via sysfs counters
 - **Configurable sections and sub-items** — toggle every section on/off; drill into each section to toggle individual sensors (cycles, health, load, freq, VRAM, etc.)
-- **CPU sensor sorting** — package temp first, then alphabetical cores
+- **Independent taskbar toggles** — "Bar" column in config always visible, even when a section is toggled off; standalone taskbar options merged into the Bar column of their related sensor row (Capacity, Package id 0, Temp)
+- **CPU sensor sorting** — package temp first, then alphabetical cores (applied in both widget and config dialog)
 - **Charge fallback** — batteries reporting µAh via `charge_full` instead of µWh via `energy_full` are detected and displayed in mAh
 - **Cleaner UI** — no emojis, percentage bars for VRAM/RAM, compact panel display
 
