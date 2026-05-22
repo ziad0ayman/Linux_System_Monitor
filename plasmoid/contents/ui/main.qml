@@ -25,6 +25,8 @@ PlasmoidItem {
     property string ramTotal:          "—"
     property string cpuFreq:           "—"
     property string cpuPkgTemp:        "—"
+    property string pkgTempLabel:      ""
+    property string pkgTempColorStr:   "#888"
     property string gpuLoad:           "—"
     property string gpuMemUsed:        "0"
     property string gpuMemTotal:       "0"
@@ -121,6 +123,11 @@ PlasmoidItem {
             updateModel(cpuTempsModel,    sortCpuSensors(filterHidden(renameCpuCores(newCpu), Plasmoid.configuration.hiddenCpuSensors)))
             updateModel(gpuTempsModel,    filterHidden(newGpu, Plasmoid.configuration.hiddenGpuSensors))
             updateModel(fanModel,         filterHidden(newFans, Plasmoid.configuration.hiddenFanSensors))
+
+            if (cpuTempsModel.count > 0) {
+                pkgTempLabel = cpuTempsModel.get(0).label
+                pkgTempColorStr = cpuTempsModel.get(0).color
+            }
 
             disconnectSource(sourceName)
         }
@@ -520,6 +527,7 @@ PlasmoidItem {
                             model: cpuTempsModel
                             delegate: RowLayout {
                                 Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                                visible: index > 0
                                 PlasmaComponents.Label { text: model.label; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
                                 PlasmaComponents.Label {
                                     text: model.value + "°C" + tempLevel(model.value)
@@ -528,6 +536,17 @@ PlasmoidItem {
                             }
                         }
                     }
+                }
+            }
+
+            // Package temp — always visible, outside collapse/scroll
+            RowLayout {
+                Layout.fillWidth: true; Layout.leftMargin: 12; Layout.rightMargin: 12
+                visible: cpuTempsModel.count > 0
+                PlasmaComponents.Label { text: root.pkgTempLabel; opacity: 0.6; font.pixelSize: 12; Layout.fillWidth: true }
+                PlasmaComponents.Label {
+                    text: root.cpuPkgTemp + "°C" + tempLevel(root.cpuPkgTemp)
+                    font.bold: true; font.pixelSize: 12; color: root.pkgTempColorStr
                 }
             }
 
