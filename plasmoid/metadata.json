@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "Plasma/Applet",
     "KPlugin": {
         "Authors": [
             {
@@ -13,12 +14,10 @@
         "Id": "com.github.nhilo94.pcmonitor",
         "License": "MIT",
         "Name": "PC Monitor",
-        "ServiceTypes": [
-            "Plasma/Applet"
-        ],
         "Version": "1.1.8",
         "Website": "https://github.com/Nhilo94/asus-ux510-monitor"
     },
     "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-MainScript": "ui/main.qml"
 }

@@ -69,18 +69,9 @@ for h in /sys/class/hwmon/hwmon*; do
             fi
             ;;
 
-        # ── Other sensors ──
-        acpitz)
-            { read -r val < "$h/temp1_input"; } 2>/dev/null && echo "OTHTEMP_ACPI=$val"
-            ;;
-        pch_*|pch)
-            { read -r val < "$h/temp1_input"; } 2>/dev/null && echo "OTHTEMP_PCH=$val"
-            ;;
-        iwlwifi*|ath*|mt76*)
-            { read -r val < "$h/temp1_input"; } 2>/dev/null && echo "OTHTEMP_WiFi=$val"
-            ;;
-        nvme*)
-            { read -r val < "$h/temp1_input"; } 2>/dev/null && echo "OTHTEMP_NVMe_$(norm "$n")=$val"
+        # ── Other sensors (acpitz/pch/iwlwifi/nvme) — mapped to fan section for reference
+        acpitz|pch_*|pch|iwlwifi*|ath*|mt76*|nvme*)
+            # silently skip — these were in the removed "Other Sensors" section
             ;;
     esac
 
@@ -116,3 +107,44 @@ else
     echo "CPULOAD=0"
 fi
 echo "$cpu_now" > "$CPU_CACHE"
+
+# ── GPU (nvidia-smi) ────────────────────────────────────────────────────────
+if command -v nvidia-smi &>/dev/null; then
+    IFS="," read -r gtemp gload gmemused gmemtotal < <(
+        nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,memory.used,memory.total \
+                   --format=csv,noheader,nounits 2>/dev/null
+    )
+    gtemp="${gtemp// /}"
+    gload="${gload// /}"
+    gmemused="${gmemused// /}"
+    gmemtotal="${gmemtotal// /}"
+    [ -n "$gload" ]      && echo "GPULOAD=${gload}"
+    [ -n "$gmemused" ]   && echo "GPUMEMUSED=${gmemused}"
+    [ -n "$gmemtotal" ]  && echo "GPUMEMTOTAL=${gmemtotal}"
+    [ -n "$gtemp" ]      && echo "GPUTEMP_NVIDIA=$((gtemp * 1000))"
+fi
+
+# ── NETWORK speed (diff /sys/class/net counters) ───────────────────────────
+NET_CACHE="/tmp/pc-monitor-net.cache"
+IFACE=""
+for iface in /sys/class/net/*; do
+    name="$(basename "$iface")"
+    [ "$name" = "lo" ] && continue
+    { read -r state < "$iface/operstate"; } 2>/dev/null || continue
+    [ "$state" = "up" ] && IFACE="$iface" && break
+done
+if [ -n "$IFACE" ]; then
+    read -r rx_now < "$IFACE/statistics/rx_bytes" 2>/dev/null || rx_now=0
+    read -r tx_now < "$IFACE/statistics/tx_bytes" 2>/dev/null || tx_now=0
+    if [ -f "$NET_CACHE" ]; then
+        read -r rx_prev tx_prev < "$NET_CACHE" 2>/dev/null || { rx_prev=0; tx_prev=0; }
+        # rate = bytes in 5 seconds = bytes / 5 → bytes/s
+        rx_rate=$(( (rx_now - rx_prev) / 5 ))
+        tx_rate=$(( (tx_now - tx_prev) / 5 ))
+        [ "$rx_rate" -lt 0 ] && rx_rate=0
+        [ "$tx_rate" -lt 0 ] && tx_rate=0
+        echo "NETDOWN=$rx_rate"
+        echo "NETUP=$tx_rate"
+    fi
+    echo "$rx_now $tx_now" > "$NET_CACHE"
+fi
