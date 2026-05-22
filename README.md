@@ -24,7 +24,7 @@ Every section and sub-item can be individually shown/hidden in the popup ("Show"
 - **Network speed** — real-time download/upload via sysfs counters
 - **Configurable sections and sub-items** — toggle every section on/off; drill into each section to toggle individual sensors (cycles, health, load, freq, VRAM, etc.)
 - **Independent taskbar toggles** — "Bar" column in config always visible, even when a section is toggled off; standalone taskbar options merged into the Bar column of their related sensor row (Capacity, Package id 0, Temp)
-- **CPU sensor sorting** — package temp first, then alphabetical cores (applied in both widget and config dialog)
+- **Logical P/E core naming** — Intel hybrid CPU cores auto-detected and renamed P1,P2… (P-cores) and E1,E2… (E-cores), sorted P-cores first
 - **Charge fallback** — batteries reporting µAh via `charge_full` instead of µWh via `energy_full` are detected and displayed in mAh
 - **Cleaner UI** — no emojis, percentage bars for VRAM/RAM, compact panel display
 

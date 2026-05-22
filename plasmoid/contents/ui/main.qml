@@ -165,7 +165,7 @@ PlasmoidItem {
         var maxGap = 0, splitAt = 0
         for (var i = 1; i < coreItems.length; i++) {
             var gap = coreItems[i].idx - coreItems[i-1].idx
-            if (gap > maxGap) { maxGap = gap; splitAt = i }
+            if (gap >= maxGap) { maxGap = gap; splitAt = i }
         }
         var result = []
         for (var i = 0; i < coreItems.length; i++) {
