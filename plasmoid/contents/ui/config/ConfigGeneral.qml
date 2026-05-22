@@ -33,7 +33,7 @@ KCM.SimpleKCM {
                     fan.push(k.substring(4).replace(/_/g, " "))
                 }
             }
-            cpuSensors = sortCpuSensors(cpu)
+            cpuSensors = sortCpuSensors(renameCpuCores(cpu))
             gpuSensors = gpu
             fanSensors = fan
             disconnectSource(sourceName)
@@ -52,16 +52,47 @@ KCM.SimpleKCM {
     }
 
     function sortCpuSensors(items) {
-        var pkg = [], rest = []
+        var pkg = [], pcores = [], ecores = [], rest = []
         for (var i = 0; i < items.length; i++) {
             var ll = items[i].toLowerCase()
             if (ll.indexOf("package") >= 0 || ll.indexOf("tdie") >= 0 || ll.indexOf("tctl") >= 0)
                 pkg.push(items[i])
+            else if (ll.indexOf("p") === 0)
+                pcores.push(items[i])
+            else if (ll.indexOf("e") === 0)
+                ecores.push(items[i])
             else
                 rest.push(items[i])
         }
+        pcores.sort(function(a, b) { return parseInt(a.substring(1)) - parseInt(b.substring(1)) })
+        ecores.sort(function(a, b) { return parseInt(a.substring(1)) - parseInt(b.substring(1)) })
         rest.sort(function(a, b) { return a.localeCompare(b) })
-        return pkg.concat(rest)
+        return pkg.concat(pcores).concat(ecores).concat(rest)
+    }
+
+    function renameCpuCores(items) {
+        var coreItems = [], otherItems = []
+        for (var i = 0; i < items.length; i++) {
+            var m = items[i].match(/^Core (\d+)$/)
+            if (m)
+                coreItems.push({ idx: parseInt(m[1]), name: items[i] })
+            else
+                otherItems.push(items[i])
+        }
+        if (coreItems.length < 2) return items
+        coreItems.sort(function(a, b) { return a.idx - b.idx })
+        var maxGap = 0, splitAt = 0
+        for (var i = 1; i < coreItems.length; i++) {
+            var gap = coreItems[i].idx - coreItems[i-1].idx
+            if (gap > maxGap) { maxGap = gap; splitAt = i }
+        }
+        var result = []
+        for (var i = 0; i < coreItems.length; i++) {
+            var prefix = i < splitAt ? "P" : "E"
+            var num = i < splitAt ? i + 1 : i - splitAt + 1
+            result.push(prefix + num)
+        }
+        return otherItems.concat(result)
     }
 
     ColumnLayout {

@@ -117,7 +117,7 @@ PlasmoidItem {
                 }
             }
 
-            updateModel(cpuTempsModel,    sortCpuSensors(filterHidden(newCpu, Plasmoid.configuration.hiddenCpuSensors)))
+            updateModel(cpuTempsModel,    sortCpuSensors(filterHidden(renameCpuCores(newCpu), Plasmoid.configuration.hiddenCpuSensors)))
             updateModel(gpuTempsModel,    filterHidden(newGpu, Plasmoid.configuration.hiddenGpuSensors))
             updateModel(fanModel,         filterHidden(newFans, Plasmoid.configuration.hiddenFanSensors))
 
@@ -131,17 +131,50 @@ PlasmoidItem {
     }
 
     function sortCpuSensors(items) {
-        var pkg = [], rest = []
+        var pkg = [], pcores = [], ecores = [], rest = []
         for (var i = 0; i < items.length; i++) {
             var ll = items[i].label.toLowerCase()
             if (ll.indexOf("package") >= 0 || ll.indexOf("tdie") >= 0 || ll.indexOf("tctl") >= 0) {
                 pkg.push(items[i])
+            } else if (ll.indexOf("p") === 0) {
+                pcores.push(items[i])
+            } else if (ll.indexOf("e") === 0) {
+                ecores.push(items[i])
             } else {
                 rest.push(items[i])
             }
         }
+        pcores.sort(function(a, b) { return parseInt(a.label.substring(1)) - parseInt(b.label.substring(1)) })
+        ecores.sort(function(a, b) { return parseInt(a.label.substring(1)) - parseInt(b.label.substring(1)) })
         rest.sort(function(a, b) { return a.label.localeCompare(b.label) })
-        return pkg.concat(rest)
+        return pkg.concat(pcores).concat(ecores).concat(rest)
+    }
+
+    function renameCpuCores(items) {
+        var coreItems = [], otherItems = []
+        for (var i = 0; i < items.length; i++) {
+            var m = items[i].label.match(/^Core (\d+)$/)
+            if (m) {
+                coreItems.push({ idx: parseInt(m[1]), item: items[i] })
+            } else {
+                otherItems.push(items[i])
+            }
+        }
+        if (coreItems.length < 2) return items
+        coreItems.sort(function(a, b) { return a.idx - b.idx })
+        var maxGap = 0, splitAt = 0
+        for (var i = 1; i < coreItems.length; i++) {
+            var gap = coreItems[i].idx - coreItems[i-1].idx
+            if (gap > maxGap) { maxGap = gap; splitAt = i }
+        }
+        var result = []
+        for (var i = 0; i < coreItems.length; i++) {
+            var prefix = i < splitAt ? "P" : "E"
+            var num = i < splitAt ? i + 1 : i - splitAt + 1
+            var newLabel = prefix + num
+            result.push({ label: newLabel, value: coreItems[i].item.value, color: coreItems[i].item.color })
+        }
+        return otherItems.concat(result)
     }
 
     function filterHidden(items, hiddenList) {
