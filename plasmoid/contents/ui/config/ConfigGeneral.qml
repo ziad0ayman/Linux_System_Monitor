@@ -44,7 +44,6 @@ KCM.SimpleKCM {
         cfgDataSource.connectSource("bash " + scriptPath)
     }
 
-
     function toggleList(list, item) {
         var idx = list.indexOf(item)
         if (idx >= 0) list.splice(idx, 1)
@@ -54,6 +53,15 @@ KCM.SimpleKCM {
 
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
+
+        // ── Column header ──
+        RowLayout {
+            Layout.leftMargin: Kirigami.Units.largeSpacing * 2
+            spacing: 4
+            Label { text: "Show"; font.pixelSize: 10; opacity: 0.5; Layout.preferredWidth: 32; horizontalAlignment: Text.AlignHCenter }
+            Label { text: "Bar";  font.pixelSize: 10; opacity: 0.5; Layout.preferredWidth: 16; horizontalAlignment: Text.AlignHCenter }
+            Label { text: ""; Layout.fillWidth: true }
+        }
 
         // ── Battery ──
         Kirigami.FormLayout {
@@ -72,13 +80,47 @@ KCM.SimpleKCM {
             id: batGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
             visible: Plasmoid.configuration.showBattery
-            Kirigami.FormLayout {
-                CheckBox { checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked;  text: i18n("Cycles") }
-                CheckBox { checked: Plasmoid.configuration.showBatteryCapacity; onToggled: Plasmoid.configuration.showBatteryCapacity = checked; text: i18n("Capacity") }
-                CheckBox { checked: Plasmoid.configuration.showBatteryHealth;  onToggled: Plasmoid.configuration.showBatteryHealth = checked;  text: i18n("Health") }
-                CheckBox { checked: Plasmoid.configuration.showBatteryEnergy;  onToggled: Plasmoid.configuration.showBatteryEnergy = checked;  text: i18n("Energy") }
-                CheckBox { checked: Plasmoid.configuration.showBatteryVoltage; onToggled: Plasmoid.configuration.showBatteryVoltage = checked; text: i18n("Voltage") }
-                CheckBox { checked: Plasmoid.configuration.showBatteryStatus;  onToggled: Plasmoid.configuration.showBatteryStatus = checked;  text: i18n("Status") }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Cycles") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showBatteryCapacity; onToggled: Plasmoid.configuration.showBatteryCapacity = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Capacity") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showBatteryHealth;  onToggled: Plasmoid.configuration.showBatteryHealth = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Health") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showBatteryEnergy;  onToggled: Plasmoid.configuration.showBatteryEnergy = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Charge") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showBatteryVoltage; onToggled: Plasmoid.configuration.showBatteryVoltage = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Voltage") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showBatteryStatus;  onToggled: Plasmoid.configuration.showBatteryStatus = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Status") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { visible: false; Layout.preferredWidth: 32 }
+                CheckBox { checked: Plasmoid.configuration.taskbarBattery; onToggled: Plasmoid.configuration.taskbarBattery = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Show battery % in taskbar"); opacity: 0.7 }
             }
         }
 
@@ -99,11 +141,11 @@ KCM.SimpleKCM {
             id: cpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
             visible: Plasmoid.configuration.showCpu
-            Kirigami.FormLayout {
-                Repeater {
-                    model: page.cpuSensors
-                    delegate: CheckBox {
-                        text: modelData
+            Repeater {
+                model: page.cpuSensors
+                delegate: RowLayout {
+                    spacing: 4
+                    CheckBox {
                         checked: (Plasmoid.configuration.hiddenCpuSensors || []).indexOf(modelData) < 0
                         onToggled: {
                             var list = Plasmoid.configuration.hiddenCpuSensors || []
@@ -111,9 +153,26 @@ KCM.SimpleKCM {
                             Plasmoid.configuration.hiddenCpuSensors = list
                         }
                     }
+                    Item { Layout.preferredWidth: 16 }
+                    Label { text: modelData }
                 }
-                CheckBox { checked: Plasmoid.configuration.showCpuLoad; onToggled: Plasmoid.configuration.showCpuLoad = checked; text: i18n("Load") }
-                CheckBox { checked: Plasmoid.configuration.showCpuFreq;  onToggled: Plasmoid.configuration.showCpuFreq = checked;  text: i18n("Frequency") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showCpuLoad; onToggled: Plasmoid.configuration.showCpuLoad = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarCpuLoad; onToggled: Plasmoid.configuration.taskbarCpuLoad = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Load") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showCpuFreq;  onToggled: Plasmoid.configuration.showCpuFreq = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarCpuFreq; onToggled: Plasmoid.configuration.taskbarCpuFreq = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Frequency") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.taskbarCpuTemp; onToggled: Plasmoid.configuration.taskbarCpuTemp = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Show CPU temp in taskbar"); opacity: 0.7; Layout.leftMargin: 36 }
             }
         }
 
@@ -134,11 +193,11 @@ KCM.SimpleKCM {
             id: gpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
             visible: Plasmoid.configuration.showGpu
-            Kirigami.FormLayout {
-                Repeater {
-                    model: page.gpuSensors
-                    delegate: CheckBox {
-                        text: modelData
+            Repeater {
+                model: page.gpuSensors
+                delegate: RowLayout {
+                    spacing: 4
+                    CheckBox {
                         checked: (Plasmoid.configuration.hiddenGpuSensors || []).indexOf(modelData) < 0
                         onToggled: {
                             var list = Plasmoid.configuration.hiddenGpuSensors || []
@@ -146,9 +205,26 @@ KCM.SimpleKCM {
                             Plasmoid.configuration.hiddenGpuSensors = list
                         }
                     }
+                    Item { Layout.preferredWidth: 16 }
+                    Label { text: modelData }
                 }
-                CheckBox { checked: Plasmoid.configuration.showGpuLoad; onToggled: Plasmoid.configuration.showGpuLoad = checked; text: i18n("Load") }
-                CheckBox { checked: Plasmoid.configuration.showGpuVram; onToggled: Plasmoid.configuration.showGpuVram = checked; text: i18n("VRAM") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showGpuLoad; onToggled: Plasmoid.configuration.showGpuLoad = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarGpuLoad; onToggled: Plasmoid.configuration.taskbarGpuLoad = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Load") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showGpuVram; onToggled: Plasmoid.configuration.showGpuVram = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarVram; onToggled: Plasmoid.configuration.taskbarVram = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("VRAM") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.taskbarGpuTemp; onToggled: Plasmoid.configuration.taskbarGpuTemp = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Show GPU temp in taskbar"); opacity: 0.7; Layout.leftMargin: 36 }
             }
         }
 
@@ -156,7 +232,7 @@ KCM.SimpleKCM {
         Rectangle { Layout.fillWidth: true; height: 1; color: Kirigami.Theme.textColor; opacity: 0.15 }
         Kirigami.FormLayout {
             CheckBox {
-                id: ram
+                id: ramSec
                 checked: Plasmoid.configuration.showRam
                 onToggled: {
                     Plasmoid.configuration.showRam = checked
@@ -169,9 +245,17 @@ KCM.SimpleKCM {
             id: ramGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
             visible: Plasmoid.configuration.showRam
-            Kirigami.FormLayout {
-                CheckBox { checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked; text: i18n("Used") }
-                CheckBox { checked: Plasmoid.configuration.showRamBar;  onToggled: Plasmoid.configuration.showRamBar = checked;  text: i18n("Usage bar") }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarRam; onToggled: Plasmoid.configuration.taskbarRam = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Used") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showRamBar;  onToggled: Plasmoid.configuration.showRamBar = checked }
+                CheckBox { visible: false; Layout.preferredWidth: 16 }
+                Label { text: i18n("Usage bar") }
             }
         }
 
@@ -192,11 +276,11 @@ KCM.SimpleKCM {
             id: fansGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
             visible: Plasmoid.configuration.showFans
-            Kirigami.FormLayout {
-                Repeater {
-                    model: page.fanSensors
-                    delegate: CheckBox {
-                        text: modelData
+            Repeater {
+                model: page.fanSensors
+                delegate: RowLayout {
+                    spacing: 4
+                    CheckBox {
                         checked: (Plasmoid.configuration.hiddenFanSensors || []).indexOf(modelData) < 0
                         onToggled: {
                             var list = Plasmoid.configuration.hiddenFanSensors || []
@@ -204,7 +288,14 @@ KCM.SimpleKCM {
                             Plasmoid.configuration.hiddenFanSensors = list
                         }
                     }
+                    Item { Layout.preferredWidth: 16 }
+                    Label { text: modelData }
                 }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.taskbarFan; onToggled: Plasmoid.configuration.taskbarFan = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Show fan RPM in taskbar"); opacity: 0.7; Layout.leftMargin: 36 }
             }
         }
 
@@ -225,9 +316,17 @@ KCM.SimpleKCM {
             id: netGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
             visible: Plasmoid.configuration.showNetwork
-            Kirigami.FormLayout {
-                CheckBox { checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked; text: i18n("Download") }
-                CheckBox { checked: Plasmoid.configuration.showNetUp;   onToggled: Plasmoid.configuration.showNetUp = checked;   text: i18n("Upload") }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarNetDown; onToggled: Plasmoid.configuration.taskbarNetDown = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Download") }
+            }
+            RowLayout {
+                spacing: 4
+                CheckBox { checked: Plasmoid.configuration.showNetUp;   onToggled: Plasmoid.configuration.showNetUp = checked }
+                CheckBox { checked: Plasmoid.configuration.taskbarNetUp; onToggled: Plasmoid.configuration.taskbarNetUp = checked; Layout.preferredWidth: 16 }
+                Label { text: i18n("Upload") }
             }
         }
     }

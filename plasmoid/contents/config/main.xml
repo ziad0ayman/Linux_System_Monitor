@@ -75,5 +75,38 @@
     <entry name="showNetUp" type="Bool">
       <default>true</default>
     </entry>
+    <entry name="taskbarBattery" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="taskbarCpuTemp" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="taskbarCpuLoad" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="taskbarCpuFreq" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="taskbarGpuTemp" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="taskbarGpuLoad" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="taskbarVram" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="taskbarRam" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="taskbarFan" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="taskbarNetDown" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="taskbarNetUp" type="Bool">
+      <default>false</default>
+    </entry>
   </group>
 </kcfg>

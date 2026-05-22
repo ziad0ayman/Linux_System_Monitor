@@ -245,7 +245,7 @@ PlasmoidItem {
             RowLayout {
                 id: compactRow
                 anchors.centerIn: parent
-                spacing: 12
+                spacing: 8
 
                 Kirigami.Icon {
                     source: "computer"
@@ -253,30 +253,92 @@ PlasmoidItem {
                     implicitHeight: 16
                 }
 
+                // CPU Temp
                 PlasmaComponents.Label {
                     text: root.cpuPkgTemp + "°"
                     font.pixelSize: 12; font.bold: true
                     color: cpuTempColor(parseInt(root.cpuPkgTemp))
+                    visible: Plasmoid.configuration.taskbarCpuTemp
                 }
 
+                // CPU Load
                 RowLayout {
                     spacing: 4
+                    visible: Plasmoid.configuration.taskbarCpuLoad
                     readonly property color c: cpuLoadColor(root.cpuLoad)
                     PlasmaComponents.Label { text: "CPU"; font.pixelSize: 9; font.bold: true; color: parent.c }
                     PlasmaComponents.Label { text: root.cpuLoad + "%"; font.pixelSize: 12; font.bold: true; color: parent.c }
                 }
 
+                // CPU Freq
                 RowLayout {
                     spacing: 4
+                    visible: Plasmoid.configuration.taskbarCpuFreq
+                    PlasmaComponents.Label { text: "FREQ"; font.pixelSize: 9; font.bold: true; color: "#60a5fa" }
+                    PlasmaComponents.Label { text: root.cpuFreq + "G"; font.pixelSize: 12; font.bold: true; color: "#60a5fa" }
+                }
+
+                // RAM
+                RowLayout {
+                    spacing: 4
+                    visible: Plasmoid.configuration.taskbarRam
                     readonly property color c: ramColor(root.ramUsed, root.ramTotal)
                     PlasmaComponents.Label { text: "RAM"; font.pixelSize: 9; font.bold: true; color: parent.c }
                     PlasmaComponents.Label { text: ramGb(root.ramUsed) + "G"; font.pixelSize: 12; font.bold: true; color: parent.c }
                 }
 
+                // Battery %
+                PlasmaComponents.Label {
+                    text: root.capacity + "%"
+                    font.pixelSize: 12; font.bold: true; color: "#4ade80"
+                    visible: root.hasBattery && Plasmoid.configuration.taskbarBattery
+                }
+
+                // GPU Temp
+                PlasmaComponents.Label {
+                    text: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).value + "°" : ""
+                    font.pixelSize: 12; font.bold: true
+                    color: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).color : "#888"
+                    visible: root.hasGpuData && Plasmoid.configuration.taskbarGpuTemp
+                }
+
+                // GPU Load
                 RowLayout {
                     spacing: 4
-                    PlasmaComponents.Label { text: "FREQ"; font.pixelSize: 9; font.bold: true; color: "#60a5fa" }
-                    PlasmaComponents.Label { text: root.cpuFreq + "G"; font.pixelSize: 12; font.bold: true; color: "#60a5fa" }
+                    visible: root.gpuLoad !== "—" && Plasmoid.configuration.taskbarGpuLoad
+                    readonly property color c: cpuLoadColor(parseInt(root.gpuLoad))
+                    PlasmaComponents.Label { text: "GPU"; font.pixelSize: 9; font.bold: true; color: parent.c }
+                    PlasmaComponents.Label { text: root.gpuLoad + "%"; font.pixelSize: 12; font.bold: true; color: parent.c }
+                }
+
+                // VRAM
+                RowLayout {
+                    spacing: 4
+                    visible: parseInt(root.gpuMemTotal) > 0 && Plasmoid.configuration.taskbarVram
+                    readonly property color c: ramColor(root.gpuMemUsed, root.gpuMemTotal)
+                    PlasmaComponents.Label { text: "VRAM"; font.pixelSize: 9; font.bold: true; color: parent.c }
+                    PlasmaComponents.Label { text: root.gpuMemUsed + "M"; font.pixelSize: 12; font.bold: true; color: parent.c }
+                }
+
+                // Fan RPM
+                PlasmaComponents.Label {
+                    text: root.fanModel.count > 0 ? root.fanModel.get(0).value : ""
+                    font.pixelSize: 12; font.bold: true; color: "#60a5fa"
+                    visible: root.fanModel.count > 0 && Plasmoid.configuration.taskbarFan
+                }
+
+                // Net Down
+                PlasmaComponents.Label {
+                    text: "↓" + netSpeed(root.netDown)
+                    font.pixelSize: 11; font.bold: true; color: "#60a5fa"
+                    visible: Plasmoid.configuration.taskbarNetDown
+                }
+
+                // Net Up
+                PlasmaComponents.Label {
+                    text: "↑" + netSpeed(root.netUp)
+                    font.pixelSize: 11; font.bold: true; color: "#4ade80"
+                    visible: Plasmoid.configuration.taskbarNetUp
                 }
             }
         }
