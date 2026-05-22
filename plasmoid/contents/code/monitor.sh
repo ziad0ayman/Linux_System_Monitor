@@ -19,8 +19,23 @@ if [ -n "$BAT_PATH" ]; then
     echo "HAS_BAT=1"
     { read -r v < "$BAT_PATH/cycle_count"; }       2>/dev/null && echo "CYCLES=$v"   || echo "CYCLES=0"
     { read -r v < "$BAT_PATH/capacity"; }          2>/dev/null && echo "CAPACITY=$v" || echo "CAPACITY=0"
-    { read -r v < "$BAT_PATH/energy_full"; }       2>/dev/null && echo "EFULL=$v"    || echo "EFULL=0"
-    { read -r v < "$BAT_PATH/energy_full_design"; } 2>/dev/null && echo "EDESIGN=$v" || echo "EDESIGN=0"
+    if { read -r v < "$BAT_PATH/energy_full"; } 2>/dev/null; then
+        echo "EFULL=$v"
+        echo "BAT_UNIT=Wh"
+    elif { read -r v < "$BAT_PATH/charge_full"; } 2>/dev/null; then
+        echo "EFULL=$v"
+        echo "BAT_UNIT=mAh"
+    else
+        echo "EFULL=0"
+        echo "BAT_UNIT=Wh"
+    fi
+    if { read -r v < "$BAT_PATH/energy_full_design"; } 2>/dev/null; then
+        echo "EDESIGN=$v"
+    elif { read -r v < "$BAT_PATH/charge_full_design"; } 2>/dev/null; then
+        echo "EDESIGN=$v"
+    else
+        echo "EDESIGN=0"
+    fi
     { read -r v < "$BAT_PATH/status"; }            2>/dev/null && echo "STATUS=$v"   || echo "STATUS=Unknown"
     { read -r v < "$BAT_PATH/voltage_now"; }       2>/dev/null && echo "VOLTAGE=$v"  || echo "VOLTAGE=0"
 fi

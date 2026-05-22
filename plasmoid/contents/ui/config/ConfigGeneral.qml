@@ -44,10 +44,6 @@ KCM.SimpleKCM {
         cfgDataSource.connectSource("bash " + scriptPath)
     }
 
-    function boolCfg(key) {
-        var v = Plasmoid.configuration[key];
-        return v !== undefined && v !== null ? v : true;
-    }
 
     function toggleList(list, item) {
         var idx = list.indexOf(item)
@@ -64,7 +60,7 @@ KCM.SimpleKCM {
             CheckBox {
                 id: bat
                 Kirigami.FormData.label: i18n("Sections:")
-                checked: boolCfg("showBattery")
+                checked: Plasmoid.configuration.showBattery
                 onToggled: {
                     Plasmoid.configuration.showBattery = checked
                     batGroup.visible = checked
@@ -75,14 +71,14 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: batGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: boolCfg("showBattery")
+            visible: Plasmoid.configuration.showBattery
             Kirigami.FormLayout {
-                CheckBox { checked: boolCfg("showBatteryCycles");  onToggled: Plasmoid.configuration.showBatteryCycles = checked;  text: i18n("Cycles") }
-                CheckBox { checked: boolCfg("showBatteryCapacity"); onToggled: Plasmoid.configuration.showBatteryCapacity = checked; text: i18n("Capacity") }
-                CheckBox { checked: boolCfg("showBatteryHealth");  onToggled: Plasmoid.configuration.showBatteryHealth = checked;  text: i18n("Health") }
-                CheckBox { checked: boolCfg("showBatteryEnergy");  onToggled: Plasmoid.configuration.showBatteryEnergy = checked;  text: i18n("Energy") }
-                CheckBox { checked: boolCfg("showBatteryVoltage"); onToggled: Plasmoid.configuration.showBatteryVoltage = checked; text: i18n("Voltage") }
-                CheckBox { checked: boolCfg("showBatteryStatus");  onToggled: Plasmoid.configuration.showBatteryStatus = checked;  text: i18n("Status") }
+                CheckBox { checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked;  text: i18n("Cycles") }
+                CheckBox { checked: Plasmoid.configuration.showBatteryCapacity; onToggled: Plasmoid.configuration.showBatteryCapacity = checked; text: i18n("Capacity") }
+                CheckBox { checked: Plasmoid.configuration.showBatteryHealth;  onToggled: Plasmoid.configuration.showBatteryHealth = checked;  text: i18n("Health") }
+                CheckBox { checked: Plasmoid.configuration.showBatteryEnergy;  onToggled: Plasmoid.configuration.showBatteryEnergy = checked;  text: i18n("Energy") }
+                CheckBox { checked: Plasmoid.configuration.showBatteryVoltage; onToggled: Plasmoid.configuration.showBatteryVoltage = checked; text: i18n("Voltage") }
+                CheckBox { checked: Plasmoid.configuration.showBatteryStatus;  onToggled: Plasmoid.configuration.showBatteryStatus = checked;  text: i18n("Status") }
             }
         }
 
@@ -91,7 +87,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             CheckBox {
                 id: cpu
-                checked: boolCfg("showCpu")
+                checked: Plasmoid.configuration.showCpu
                 onToggled: {
                     Plasmoid.configuration.showCpu = checked
                     cpuGroup.visible = checked
@@ -102,7 +98,7 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: cpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: boolCfg("showCpu")
+            visible: Plasmoid.configuration.showCpu
             Kirigami.FormLayout {
                 Repeater {
                     model: page.cpuSensors
@@ -116,8 +112,8 @@ KCM.SimpleKCM {
                         }
                     }
                 }
-                CheckBox { checked: boolCfg("showCpuLoad"); onToggled: Plasmoid.configuration.showCpuLoad = checked; text: i18n("Load") }
-                CheckBox { checked: boolCfg("showCpuFreq");  onToggled: Plasmoid.configuration.showCpuFreq = checked;  text: i18n("Frequency") }
+                CheckBox { checked: Plasmoid.configuration.showCpuLoad; onToggled: Plasmoid.configuration.showCpuLoad = checked; text: i18n("Load") }
+                CheckBox { checked: Plasmoid.configuration.showCpuFreq;  onToggled: Plasmoid.configuration.showCpuFreq = checked;  text: i18n("Frequency") }
             }
         }
 
@@ -126,7 +122,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             CheckBox {
                 id: gpu
-                checked: boolCfg("showGpu")
+                checked: Plasmoid.configuration.showGpu
                 onToggled: {
                     Plasmoid.configuration.showGpu = checked
                     gpuGroup.visible = checked
@@ -137,7 +133,7 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: gpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: boolCfg("showGpu")
+            visible: Plasmoid.configuration.showGpu
             Kirigami.FormLayout {
                 Repeater {
                     model: page.gpuSensors
@@ -151,8 +147,8 @@ KCM.SimpleKCM {
                         }
                     }
                 }
-                CheckBox { checked: boolCfg("showGpuLoad"); onToggled: Plasmoid.configuration.showGpuLoad = checked; text: i18n("Load") }
-                CheckBox { checked: boolCfg("showGpuVram"); onToggled: Plasmoid.configuration.showGpuVram = checked; text: i18n("VRAM") }
+                CheckBox { checked: Plasmoid.configuration.showGpuLoad; onToggled: Plasmoid.configuration.showGpuLoad = checked; text: i18n("Load") }
+                CheckBox { checked: Plasmoid.configuration.showGpuVram; onToggled: Plasmoid.configuration.showGpuVram = checked; text: i18n("VRAM") }
             }
         }
 
@@ -161,7 +157,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             CheckBox {
                 id: ram
-                checked: boolCfg("showRam")
+                checked: Plasmoid.configuration.showRam
                 onToggled: {
                     Plasmoid.configuration.showRam = checked
                     ramGroup.visible = checked
@@ -172,10 +168,10 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: ramGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: boolCfg("showRam")
+            visible: Plasmoid.configuration.showRam
             Kirigami.FormLayout {
-                CheckBox { checked: boolCfg("showRamUsed"); onToggled: Plasmoid.configuration.showRamUsed = checked; text: i18n("Used") }
-                CheckBox { checked: boolCfg("showRamBar");  onToggled: Plasmoid.configuration.showRamBar = checked;  text: i18n("Usage bar") }
+                CheckBox { checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked; text: i18n("Used") }
+                CheckBox { checked: Plasmoid.configuration.showRamBar;  onToggled: Plasmoid.configuration.showRamBar = checked;  text: i18n("Usage bar") }
             }
         }
 
@@ -184,7 +180,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             CheckBox {
                 id: fans
-                checked: boolCfg("showFans")
+                checked: Plasmoid.configuration.showFans
                 onToggled: {
                     Plasmoid.configuration.showFans = checked
                     fansGroup.visible = checked
@@ -195,7 +191,7 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: fansGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: boolCfg("showFans")
+            visible: Plasmoid.configuration.showFans
             Kirigami.FormLayout {
                 Repeater {
                     model: page.fanSensors
@@ -217,7 +213,7 @@ KCM.SimpleKCM {
         Kirigami.FormLayout {
             CheckBox {
                 id: net
-                checked: boolCfg("showNetwork")
+                checked: Plasmoid.configuration.showNetwork
                 onToggled: {
                     Plasmoid.configuration.showNetwork = checked
                     netGroup.visible = checked
@@ -228,10 +224,10 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: netGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: boolCfg("showNetwork")
+            visible: Plasmoid.configuration.showNetwork
             Kirigami.FormLayout {
-                CheckBox { checked: boolCfg("showNetDown"); onToggled: Plasmoid.configuration.showNetDown = checked; text: i18n("Download") }
-                CheckBox { checked: boolCfg("showNetUp");   onToggled: Plasmoid.configuration.showNetUp = checked;   text: i18n("Upload") }
+                CheckBox { checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked; text: i18n("Download") }
+                CheckBox { checked: Plasmoid.configuration.showNetUp;   onToggled: Plasmoid.configuration.showNetUp = checked;   text: i18n("Upload") }
             }
         }
     }
