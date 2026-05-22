@@ -8,22 +8,23 @@ Forked and ported from [asus-ux510-monitor](https://github.com/nhilo94/asus-ux51
 
 | Section | Sensors |
 |---------|---------|
-| **Battery** | Cycles, capacity %, health %, energy (Wh), voltage, charge status |
+| **Battery** | Cycles, capacity %, health %, charge (Wh/mAh), voltage, charge status |
 | **CPU** | Per-core temps, load %, frequency (via `coretemp`/`k10temp` hwmon) |
 | **GPU** | Temp, load %, VRAM used/total (via `nvidia-smi`) |
 | **RAM** | Used / total with usage bar |
 | **Fans** | CPU/GPU fan RPM (via `asus` hwmon) |
 | **Network** | Download / upload speed (auto-detects active interface) |
 
-All sections can be shown/hidden via the configuration dialog. CPU and GPU sensors can be individually toggled.
+Every section and sub-item can be individually shown/hidden via the configuration dialog. Dynamic sensor lists (CPU cores, GPU sensors, fans) have per-sensor toggles.
 
 ## Changes from upstream
 
 - **KDE Plasma 6** — ported from Plasma 5 (PlasmoidItem, plasma5support DataSource, Kirigami.Icon, kpackagetool6)
 - **NVIDIA GPU stats** — load %, VRAM usage, temperature (requires `nvidia-smi`)
 - **Network speed** — real-time download/upload via sysfs counters
-- **Configurable sections** — toggle Battery, CPU cores, GPU sensors, Fans, Network individually
+- **Configurable sections and sub-items** — toggle every section on/off; drill into each section to toggle individual sensors (cycles, health, load, freq, VRAM, etc.)
 - **CPU sensor sorting** — package temp first, then alphabetical cores
+- **Charge fallback** — batteries reporting µAh via `charge_full` instead of µWh via `energy_full` are detected and displayed in mAh
 - **Cleaner UI** — no emojis, percentage bars for VRAM/RAM, compact panel display
 
 ## Install
