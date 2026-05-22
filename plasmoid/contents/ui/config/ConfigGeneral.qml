@@ -76,41 +76,39 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: batGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            opacity: Plasmoid.configuration.showBattery ? 1 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 150 } }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked }
+                CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Cycles") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showBatteryCapacity; onToggled: Plasmoid.configuration.showBatteryCapacity = checked }
+                CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryCapacity; onToggled: Plasmoid.configuration.showBatteryCapacity = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Capacity") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showBatteryHealth;  onToggled: Plasmoid.configuration.showBatteryHealth = checked }
+                CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryHealth;  onToggled: Plasmoid.configuration.showBatteryHealth = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Health") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showBatteryEnergy;  onToggled: Plasmoid.configuration.showBatteryEnergy = checked }
+                CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryEnergy;  onToggled: Plasmoid.configuration.showBatteryEnergy = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Charge") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showBatteryVoltage; onToggled: Plasmoid.configuration.showBatteryVoltage = checked }
+                CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryVoltage; onToggled: Plasmoid.configuration.showBatteryVoltage = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Voltage") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showBatteryStatus;  onToggled: Plasmoid.configuration.showBatteryStatus = checked }
+                CheckBox { visible: Plasmoid.configuration.showBattery; checked: Plasmoid.configuration.showBatteryStatus;  onToggled: Plasmoid.configuration.showBatteryStatus = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Status") }
             }
@@ -135,13 +133,12 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: cpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            opacity: Plasmoid.configuration.showCpu ? 1 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 150 } }
             Repeater {
                 model: page.cpuSensors
                 delegate: RowLayout {
                     spacing: 4
                     CheckBox {
+                        visible: Plasmoid.configuration.showCpu
                         checked: (Plasmoid.configuration.hiddenCpuSensors || []).indexOf(modelData) < 0
                         onToggled: {
                             var list = Plasmoid.configuration.hiddenCpuSensors || []
@@ -155,13 +152,13 @@ KCM.SimpleKCM {
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showCpuLoad; onToggled: Plasmoid.configuration.showCpuLoad = checked }
+                CheckBox { visible: Plasmoid.configuration.showCpu; checked: Plasmoid.configuration.showCpuLoad; onToggled: Plasmoid.configuration.showCpuLoad = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarCpuLoad; onToggled: Plasmoid.configuration.taskbarCpuLoad = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Load") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showCpuFreq;  onToggled: Plasmoid.configuration.showCpuFreq = checked }
+                CheckBox { visible: Plasmoid.configuration.showCpu; checked: Plasmoid.configuration.showCpuFreq;  onToggled: Plasmoid.configuration.showCpuFreq = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarCpuFreq; onToggled: Plasmoid.configuration.taskbarCpuFreq = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Frequency") }
             }
@@ -185,13 +182,12 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: gpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            opacity: Plasmoid.configuration.showGpu ? 1 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 150 } }
             Repeater {
                 model: page.gpuSensors
                 delegate: RowLayout {
                     spacing: 4
                     CheckBox {
+                        visible: Plasmoid.configuration.showGpu
                         checked: (Plasmoid.configuration.hiddenGpuSensors || []).indexOf(modelData) < 0
                         onToggled: {
                             var list = Plasmoid.configuration.hiddenGpuSensors || []
@@ -205,13 +201,13 @@ KCM.SimpleKCM {
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showGpuLoad; onToggled: Plasmoid.configuration.showGpuLoad = checked }
+                CheckBox { visible: Plasmoid.configuration.showGpu; checked: Plasmoid.configuration.showGpuLoad; onToggled: Plasmoid.configuration.showGpuLoad = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarGpuLoad; onToggled: Plasmoid.configuration.taskbarGpuLoad = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Load") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showGpuVram; onToggled: Plasmoid.configuration.showGpuVram = checked }
+                CheckBox { visible: Plasmoid.configuration.showGpu; checked: Plasmoid.configuration.showGpuVram; onToggled: Plasmoid.configuration.showGpuVram = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarVram; onToggled: Plasmoid.configuration.taskbarVram = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("VRAM") }
             }
@@ -228,24 +224,24 @@ KCM.SimpleKCM {
             CheckBox {
                 id: ramSec
                 checked: Plasmoid.configuration.showRam
-                onToggled: Plasmoid.configuration.showRam = checked
+                onToggled: {
+                    Plasmoid.configuration.showRam = checked
+                }
                 text: i18n("RAM")
             }
         }
         ColumnLayout {
             id: ramGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            opacity: Plasmoid.configuration.showRam ? 1 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 150 } }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked }
+                CheckBox { visible: Plasmoid.configuration.showRam; checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarRam; onToggled: Plasmoid.configuration.taskbarRam = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Used") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showRamBar;  onToggled: Plasmoid.configuration.showRamBar = checked }
+                CheckBox { visible: Plasmoid.configuration.showRam; checked: Plasmoid.configuration.showRamBar;  onToggled: Plasmoid.configuration.showRamBar = checked }
                 CheckBox { visible: false; Layout.preferredWidth: 16 }
                 Label { text: i18n("Usage bar") }
             }
@@ -264,13 +260,12 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: fansGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            opacity: Plasmoid.configuration.showFans ? 1 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 150 } }
             Repeater {
                 model: page.fanSensors
                 delegate: RowLayout {
                     spacing: 4
                     CheckBox {
+                        visible: Plasmoid.configuration.showFans
                         checked: (Plasmoid.configuration.hiddenFanSensors || []).indexOf(modelData) < 0
                         onToggled: {
                             var list = Plasmoid.configuration.hiddenFanSensors || []
@@ -297,17 +292,15 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: netGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            opacity: Plasmoid.configuration.showNetwork ? 1 : 0.4
-            Behavior on opacity { NumberAnimation { duration: 150 } }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked }
+                CheckBox { visible: Plasmoid.configuration.showNetwork; checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarNetDown; onToggled: Plasmoid.configuration.taskbarNetDown = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Download") }
             }
             RowLayout {
                 spacing: 4
-                CheckBox { checked: Plasmoid.configuration.showNetUp;   onToggled: Plasmoid.configuration.showNetUp = checked }
+                CheckBox { visible: Plasmoid.configuration.showNetwork; checked: Plasmoid.configuration.showNetUp;   onToggled: Plasmoid.configuration.showNetUp = checked }
                 CheckBox { checked: Plasmoid.configuration.taskbarNetUp; onToggled: Plasmoid.configuration.taskbarNetUp = checked; Layout.preferredWidth: 16 }
                 Label { text: i18n("Upload") }
             }
