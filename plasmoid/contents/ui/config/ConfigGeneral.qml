@@ -79,7 +79,6 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: batGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: Plasmoid.configuration.showBattery
             RowLayout {
                 spacing: 4
                 CheckBox { checked: Plasmoid.configuration.showBatteryCycles;  onToggled: Plasmoid.configuration.showBatteryCycles = checked }
@@ -140,7 +139,6 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: cpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: Plasmoid.configuration.showCpu
             Repeater {
                 model: page.cpuSensors
                 delegate: RowLayout {
@@ -192,7 +190,6 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: gpuGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: Plasmoid.configuration.showGpu
             Repeater {
                 model: page.gpuSensors
                 delegate: RowLayout {
@@ -244,7 +241,6 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: ramGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: Plasmoid.configuration.showRam
             RowLayout {
                 spacing: 4
                 CheckBox { checked: Plasmoid.configuration.showRamUsed; onToggled: Plasmoid.configuration.showRamUsed = checked }
@@ -275,7 +271,6 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: fansGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: Plasmoid.configuration.showFans
             Repeater {
                 model: page.fanSensors
                 delegate: RowLayout {
@@ -310,7 +305,6 @@ KCM.SimpleKCM {
         ColumnLayout {
             id: netGroup
             Layout.leftMargin: Kirigami.Units.largeSpacing * 2
-            visible: Plasmoid.configuration.showNetwork
             RowLayout {
                 spacing: 4
                 CheckBox { checked: Plasmoid.configuration.showNetDown; onToggled: Plasmoid.configuration.showNetDown = checked }
