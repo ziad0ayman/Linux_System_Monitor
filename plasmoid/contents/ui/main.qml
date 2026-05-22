@@ -289,10 +289,10 @@ PlasmoidItem {
 
                 // GPU Temp
                 PlasmaComponents.Label {
-                    text: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).value + "°" : ""
+                    text: gpuTempsModel.count > 0 ? gpuTempsModel.get(0).value + "°" : ""
                     font.pixelSize: 12; font.bold: true
-                    color: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).color : "#888"
-                    visible: root.gpuTempsModel.count > 0 && Plasmoid.configuration.taskbarGpuTemp
+                    color: gpuTempsModel.count > 0 ? gpuTempsModel.get(0).color : "#888"
+                    visible: gpuTempsModel.count > 0 && Plasmoid.configuration.taskbarGpuTemp
                 }
 
                 // GPU Load
