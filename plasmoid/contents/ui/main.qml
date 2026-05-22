@@ -299,7 +299,7 @@ PlasmoidItem {
                     text: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).value + "°" : ""
                     font.pixelSize: 12; font.bold: true
                     color: root.gpuTempsModel.count > 0 ? root.gpuTempsModel.get(0).color : "#888"
-                    visible: root.hasGpuData && Plasmoid.configuration.taskbarGpuTemp
+                    visible: root.gpuTempsModel.count > 0 && Plasmoid.configuration.taskbarGpuTemp
                 }
 
                 // GPU Load
@@ -320,13 +320,6 @@ PlasmoidItem {
                     PlasmaComponents.Label { text: root.gpuMemUsed + "M"; font.pixelSize: 12; font.bold: true; color: parent.c }
                 }
 
-                // Fan RPM
-                PlasmaComponents.Label {
-                    text: root.fanModel.count > 0 ? root.fanModel.get(0).value : ""
-                    font.pixelSize: 12; font.bold: true; color: "#60a5fa"
-                    visible: root.fanModel.count > 0 && Plasmoid.configuration.taskbarFan
-                }
-
                 // Net Down
                 PlasmaComponents.Label {
                     text: "↓" + netSpeed(root.netDown)
@@ -339,6 +332,13 @@ PlasmoidItem {
                     text: "↑" + netSpeed(root.netUp)
                     font.pixelSize: 11; font.bold: true; color: "#4ade80"
                     visible: Plasmoid.configuration.taskbarNetUp
+                }
+
+                // Battery % — always at the far right
+                PlasmaComponents.Label {
+                    text: root.capacity + "%"
+                    font.pixelSize: 12; font.bold: true; color: "#4ade80"
+                    visible: root.hasBattery && Plasmoid.configuration.taskbarBattery
                 }
             }
         }

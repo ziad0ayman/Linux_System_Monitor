@@ -292,11 +292,6 @@ KCM.SimpleKCM {
                     Label { text: modelData }
                 }
             }
-            RowLayout {
-                spacing: 4
-                CheckBox { checked: Plasmoid.configuration.taskbarFan; onToggled: Plasmoid.configuration.taskbarFan = checked; Layout.preferredWidth: 16 }
-                Label { text: i18n("Show fan RPM in taskbar"); opacity: 0.7; Layout.leftMargin: 36 }
-            }
         }
 
         // ── Network ──
